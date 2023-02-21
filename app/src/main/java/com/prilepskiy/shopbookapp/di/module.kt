@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.prilepskiy.shopbookapp.data.apiservice.BookApiService
 import com.prilepskiy.shopbookapp.data.database.BooksAppDatabase
+import com.prilepskiy.shopbookapp.data.repository.BookRepositoryImpl
 import com.prilepskiy.shopbookapp.data.unit.HeaderInterceptor
+import com.prilepskiy.shopbookapp.domain.repository.BookRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +61,9 @@ object NetworkModule {
 class  BooksApiModule(){
     @Provides
     fun provideApiModule(retrofit: Retrofit): BookApiService =retrofit.create(BookApiService::class.java)
+}
+@Module
+@InstallIn(ViewModelComponent::class)
+class RepositoryBookModule(){
+    fun provideRepositoryBook(dataNetwork:BookApiService,database: BooksAppDatabase):BookRepository=BookRepositoryImpl(dataNetwork,database)
 }
