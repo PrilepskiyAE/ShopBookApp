@@ -55,7 +55,7 @@ object NetworkModule {
 
 }
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class  BooksApiModule(){
     @Provides
     fun provideApiModule(retrofit: Retrofit): BookApiService =retrofit.create(BookApiService::class.java)
