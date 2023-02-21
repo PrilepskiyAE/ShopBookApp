@@ -1,4 +1,4 @@
-package com.prilepskiy.shopbookapp.ui.theme
+package com.prilepskiy.shopbookapp.presenter.theme
 
 import androidx.compose.ui.graphics.Color
 

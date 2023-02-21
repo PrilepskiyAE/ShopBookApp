@@ -1,4 +1,4 @@
-package com.prilepskiy.shopbookapp
+package com.prilepskiy.shopbookapp.presenter.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.prilepskiy.shopbookapp.ui.theme.ShopBookAppTheme
+import com.prilepskiy.shopbookapp.presenter.theme.ShopBookAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
