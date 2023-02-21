@@ -23,7 +23,7 @@ class BookRepositoryImpl @Inject constructor(private val dataNetwork: BookApiSer
         }
         return when(apiData){
             is ActionResult.Success -> {
-                apiData.data.result.onEach {
+                apiData.data.results.onEach {
                     resultData.add(BookModel.from(it))
                     dataDB.booksDao.insert(BookEntity.from(it))
                 }

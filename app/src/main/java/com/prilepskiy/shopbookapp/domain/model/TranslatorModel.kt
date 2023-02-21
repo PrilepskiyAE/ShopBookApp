@@ -8,12 +8,12 @@ data class TranslatorModel(
     val name: String
 ){
     companion object{
-        fun from(data: TranslatorResponse): TranslatorModel = with(data){
-            TranslatorModel(birth_year, death_year, name)
+        fun from(data: TranslatorResponse?): TranslatorModel {
+          return  TranslatorModel(data?.birth_year?:0, data?.death_year?:0, data?.name?:"")
         }
-        fun from(data:List<TranslatorResponse>):List<TranslatorModel> {
+        fun from(data:List<TranslatorResponse?>?):List<TranslatorModel> {
             val temp:MutableList<TranslatorModel> = mutableListOf()
-            data.forEach {
+            data?.forEach {
                 temp.add(from(it))
             }
             return temp

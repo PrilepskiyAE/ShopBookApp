@@ -3,9 +3,9 @@ package com.prilepskiy.shopbookapp.data.response
 import com.prilepskiy.shopbookapp.domain.model.AuthorModel
 
 data class AuthorResponse(
-    val birth_year: Int,
-    val death_year: Int,
-    val name: String
+    val birth_year: Int?,
+    val death_year: Int?,
+    val name: String?
 ){
     companion object{
         fun from(data:AuthorModel):AuthorResponse  = with(data){

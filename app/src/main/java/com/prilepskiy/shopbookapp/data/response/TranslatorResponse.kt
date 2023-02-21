@@ -4,9 +4,9 @@ import com.prilepskiy.shopbookapp.domain.model.AuthorModel
 import com.prilepskiy.shopbookapp.domain.model.TranslatorModel
 
 data class TranslatorResponse(
-    val birth_year: Int,
-    val death_year: Int,
-    val name: String
+    val birth_year: Int?,
+    val death_year: Int?,
+    val name: String?
 ){
     companion object{
         fun from(data: TranslatorModel):TranslatorResponse  = with(data){
