@@ -9,13 +9,13 @@ data class AuthorModel(
 ) {
     companion object {
 
-        fun from(data: AuthorResponse): AuthorModel = with(data) {
-            AuthorModel(birth_year, death_year, name)
+        fun from(data: AuthorResponse?): AuthorModel  {
+          return  AuthorModel(data?.birth_year?:0, data?.death_year?:0, data?.name?:"")
         }
 
-        fun from(data: List<AuthorResponse>): List<AuthorModel> {
+        fun from(data2: List<AuthorResponse?>?): List<AuthorModel> {
             val temp: MutableList<AuthorModel> = mutableListOf()
-            data.forEach {
+            data2?.forEach {
                 temp.add(from(it))
             }
             return temp

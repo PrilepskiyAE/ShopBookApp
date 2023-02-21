@@ -12,34 +12,35 @@ import com.prilepskiy.shopbookapp.domain.model.BookModel
 @Entity(tableName = "book_table")
 @TypeConverters(BookEntityConverter::class)
 data class BookEntity(
-    val author: List<AuthorResponse>,
-    val bookshelves: List<String>,
+    val author: List<AuthorResponse?>,
+    val bookshelves: List<String?>,
     val copyright: Boolean,
     val download_count: Int,
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val languages: List<String>,
+    val languages: List<String?>,
     val media_type: String,
-    val subjects: List<String>,
+    val subjects: List<String?>,
     val title: String,
-    val translator: List<TranslatorResponse>
+    val translator: List<TranslatorResponse?>
 ) {
     companion object {
-        fun from(data: BookResponse): BookEntity = with(data) {
-            BookEntity(
-                author,
-                bookshelves,
-                copyright,
-                download_count,
-                id,
-                languages,
-                media_type,
-                subjects,
-                title,
-                translator
+        fun from(data: BookResponse?): BookEntity {
+            return BookEntity(
+                data?.author ?: listOf(),
+                data?.bookshelves ?: listOf(),
+                data?.copyright ?: false,
+                data?.download_count ?: 0,
+                data?.id ?: 0,
+                data?.languages ?: listOf(),
+                data?.media_type ?: "",
+                data?.subjects ?: listOf(),
+                data?.title ?: "",
+                data?.translator ?: listOf()
             )
         }
-        fun from(data: BookModel):BookEntity=with(data) {
+
+        fun from(data: BookModel): BookEntity = with(data) {
             BookEntity(
                 AuthorResponse.from(author),
                 bookshelves,

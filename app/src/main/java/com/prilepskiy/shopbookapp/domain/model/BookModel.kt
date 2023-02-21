@@ -7,13 +7,13 @@ import com.prilepskiy.shopbookapp.data.response.TranslatorResponse
 
 data class BookModel(
     val author: List<AuthorModel>,
-    val bookshelves: List<String>,
+    val bookshelves: List<String?>,
     val copyright: Boolean,
     val download_count: Int,
     val id: Int,
-    val languages: List<String>,
+    val languages: List<String?>,
     val media_type: String,
-    val subjects: List<String>,
+    val subjects: List<String?>,
     val title: String,
     val translator: List<TranslatorModel>
 ){
@@ -21,14 +21,14 @@ data class BookModel(
         fun from(data: BookResponse): BookModel = with(data) {
             BookModel(
                 AuthorModel.from(author),
-                bookshelves,
-                copyright,
-                download_count,
-                id,
+                bookshelves?:listOf(),
+                copyright?:false,
+                download_count?:0,
+                id?:0,
                 languages,
-                media_type,
+                media_type?:"",
                 subjects,
-                title,
+                title?:"",
                 TranslatorModel.from(translator)
             )
         }

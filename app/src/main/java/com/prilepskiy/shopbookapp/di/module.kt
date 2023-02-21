@@ -40,7 +40,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitMovie() : Retrofit =
+    fun provideRetrofitMovie(): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://gutendex.com")
             .addConverterFactory(GsonConverterFactory.create())
@@ -60,30 +60,36 @@ object NetworkModule {
             .build()
 
 }
+
 @Module
 @InstallIn(SingletonComponent::class)
-class  BooksApiModule(){
+class BooksApiModule() {
     @Provides
     @Singleton
-    fun provideApiModule(retrofit: Retrofit): BookApiService =retrofit.create(BookApiService::class.java)
+    fun provideApiModule(retrofit: Retrofit): BookApiService =
+        retrofit.create(BookApiService::class.java)
 }
+
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryBookModule(){
+class RepositoryBookModule() {
     @Provides
     @Singleton
-    fun provideRepositoryBook(dataNetwork:BookApiService,database: BooksAppDatabase):BookRepository=BookRepositoryImpl(dataNetwork,database)
+    fun provideRepositoryBook(
+        dataNetwork: BookApiService,
+        database: BooksAppDatabase
+    ): BookRepository = BookRepositoryImpl(dataNetwork, database)
 }
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class UseCasBookModule(){
+class UseCasBookModule() {
     @Provides
-    fun provideGetBookListDataBaseUseCase(data:BookRepository): GetBookListDataBaseUseCase =
+    fun provideGetBookListDataBaseUseCase(data: BookRepository): GetBookListDataBaseUseCase =
         GetBookListDataBaseUseCaseImpl(data)
 
     @Provides
-    fun provideGetBookListNetworkUseCase(data:BookRepository): GetBookListNetworkUseCase =
+    fun provideGetBookListNetworkUseCase(data: BookRepository): GetBookListNetworkUseCase =
         GetBookListNetworkUseCaseImpl(data)
 
 }
