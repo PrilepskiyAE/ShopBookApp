@@ -6,7 +6,11 @@ import com.prilepskiy.shopbookapp.data.apiservice.BookApiService
 import com.prilepskiy.shopbookapp.data.database.BooksAppDatabase
 import com.prilepskiy.shopbookapp.data.repository.BookRepositoryImpl
 import com.prilepskiy.shopbookapp.data.unit.HeaderInterceptor
+import com.prilepskiy.shopbookapp.domain.interactors.GetBookListDataBaseUseCase
+import com.prilepskiy.shopbookapp.domain.interactors.GetBookListNetworkUseCase
 import com.prilepskiy.shopbookapp.domain.repository.BookRepository
+import com.prilepskiy.shopbookapp.domain.usecase.GetBookListDataBaseUseCaseImpl
+import com.prilepskiy.shopbookapp.domain.usecase.GetBookListNetworkUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,13 +61,29 @@ object NetworkModule {
 
 }
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class  BooksApiModule(){
     @Provides
+    @Singleton
     fun provideApiModule(retrofit: Retrofit): BookApiService =retrofit.create(BookApiService::class.java)
 }
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class RepositoryBookModule(){
+    @Provides
+    @Singleton
     fun provideRepositoryBook(dataNetwork:BookApiService,database: BooksAppDatabase):BookRepository=BookRepositoryImpl(dataNetwork,database)
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class UseCasBookModule(){
+    @Provides
+    fun provideGetBookListDataBaseUseCase(data:BookRepository): GetBookListDataBaseUseCase =
+        GetBookListDataBaseUseCaseImpl(data)
+
+    @Provides
+    fun provideGetBookListNetworkUseCase(data:BookRepository): GetBookListNetworkUseCase =
+        GetBookListNetworkUseCaseImpl(data)
+
 }
