@@ -10,6 +10,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import com.prilepskiy.shopbookapp.R
 import com.prilepskiy.shopbookapp.presenter.theme.ShopBookAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -43,8 +47,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
 
 
-                    topBar = { TopAppBar(title = {  outlinedTextFieldComposable() }, backgroundColor = Color(0xff0f9d58)) },
-
+                    topBar = { TopAppBarBookList({},{}) },
 
                     content = {it
 
@@ -52,8 +55,7 @@ class MainActivity : ComponentActivity() {
 
                             val items = (1..100).map { "Item $it" }
                             val lazyListState = rememberLazyListState()
-                            var scrolledY = 0f
-                            var previousOffset = 0
+
                             LazyColumn(
                                 Modifier.fillMaxSize(),
                                 lazyListState,
@@ -61,33 +63,7 @@ class MainActivity : ComponentActivity() {
 
                                 item {
 
-                                    LazyRow(
-                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        verticalAlignment = Alignment.Top
-                                    ) {
-
-
-                                        itemsIndexed(items = (1..10).toList()) { pos, _ ->
-
-                                                Image(
-                                        painter = painterResource(id = R.drawable.sample_image),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.FillWidth,
-                                        modifier = Modifier
-                                            .graphicsLayer {
-                                                scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
-                                                translationY = scrolledY * 0.5f
-                                                previousOffset = lazyListState.firstVisibleItemScrollOffset
-                                            }
-                                            .height(240.dp)
-                                            .fillMaxWidth()
-                                    )
-
-                                            }
-
-
-                                    }
+                                    Banners(items)
                                 }
 
                                 items(items) {
@@ -108,7 +84,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun outlinedTextFieldComposable():String {
+    fun OutlinedTextFieldComposable():String {
         var text by remember { mutableStateOf("") }
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -119,6 +95,64 @@ class MainActivity : ComponentActivity() {
         )
         return text
     }
+
+    @Composable
+    fun Banners(list:List<String>){
+        val lazyListState = rememberLazyListState()
+        LazyRow(
+            state = lazyListState
+        ) {
+
+
+            itemsIndexed(items = list) { pos, _ ->
+
+                Image(
+                    painter = painterResource(id = R.drawable.sample_image),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(450.dp)
+                )
+
+            }
+
+
+        }
+        LaunchedEffect(true) {
+            repeat(Int.MAX_VALUE) {
+                delay(5500)
+                lazyListState.animateScrollToItem( it % list.size)
+            }
+        }
+    }
+
+    @Composable
+    fun TopAppBarBookList(searchBook: (String)->Unit,cleanBook: ()->Unit){
+        var searchValues by remember { mutableStateOf("") }
+        TopAppBar(modifier = Modifier.height(100.dp),
+
+            elevation = 4.dp,
+            title= {searchValues= OutlinedTextFieldComposable() },
+            backgroundColor =  Color(0xFFF39F0D),
+            actions = {
+                IconButton(onClick = { searchBook(searchValues)  }) {
+                    Icon(Icons.Filled.Search, null,
+                        Modifier
+                            .height(30.dp)
+                            .width(30.dp))
+                }
+                IconButton(onClick = { cleanBook()  }) {
+                    Icon(
+                        Icons.Filled.Check, null,
+                        Modifier
+                            .height(30.dp)
+                            .width(30.dp))
+                }
+            })
+
+
+    }
+
 }
+
 
 
