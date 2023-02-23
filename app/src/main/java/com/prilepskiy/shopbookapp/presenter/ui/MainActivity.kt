@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.prilepskiy.shopbookapp.R
+import com.prilepskiy.shopbookapp.data.apiservice.BannerApiService
 import com.prilepskiy.shopbookapp.presenter.theme.ShopBookAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
                                 item {
 
-                                    Banners(items)
+                                    Banners(BannerApiService.getListBanner())
                                 }
 
                                 items(items) {
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
     fun OutlinedTextFieldComposable():String {
         var text by remember { mutableStateOf("") }
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+
             value = text,
             onValueChange = { text = it },
             label = { Text("search books") }
@@ -105,27 +106,39 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Banners(list:List<String>){
+    fun Banners(list:List<Int>){
         val lazyListState = rememberLazyListState()
-        LazyRow(
-            state = lazyListState
-        ) {
+Box( ) {
+    LazyRow(
+        state = lazyListState
+
+    ) {
 
 
-            itemsIndexed(items = list) { pos, _ ->
+        itemsIndexed(items = list) { pos, _ ->
 
-                Image(
-                    painter = painterResource(id = R.drawable.sample_image),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.width(450.dp)
-                )
-
-            }
-
+            Image(
+                painter = painterResource(list[pos]),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.width(450.dp).height(200.dp)
+            )
 
         }
-        PageIndicatorSample()
+
+
+    }
+    Box(Modifier.fillMaxHeight().padding(top = 190.dp).padding(horizontal = 150.dp)) {
+        PageIndicator(
+
+            numberOfPages =  list.size,
+            selectedPage = lazyListState.firstVisibleItemIndex,
+
+            )
+    }
+
+}
+
         LaunchedEffect(true) {
             repeat(Int.MAX_VALUE) {
                 delay(5500)
@@ -133,22 +146,27 @@ class MainActivity : ComponentActivity() {
                 lazyListState.animateScrollToItem( it % list.size)
             }
         }
-    }
+
+
+
+
+
+
+
+        }
+
 
     @Composable
     fun TopAppBarBookList(searchBook: (String)->Unit,cleanBook: ()->Unit){
         var searchValues by remember { mutableStateOf("") }
-        TopAppBar(modifier = Modifier.height(100.dp),
+        TopAppBar(
 
-            elevation = 4.dp,
+
             title= {searchValues= OutlinedTextFieldComposable() },
             backgroundColor =  Color(0xFFF39F0D),
             actions = {
                 IconButton(onClick = { searchBook(searchValues)  }) {
-                    Icon(Icons.Filled.Search, null,
-                        Modifier
-                            .height(30.dp)
-                            .width(30.dp))
+                    Icon(Icons.Filled.Search, null)
                 }
                 IconButton(onClick = { cleanBook()  }) {
                     Icon(
@@ -162,30 +180,7 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    @Composable
-    fun PageIndicatorSample() {
-        val numberOfPages = 3
-        val (selectedPage, setSelectedPage) = remember {
-            mutableStateOf(0)
-        }
 
-        // NEVER use this, this is just for example
-        LaunchedEffect(
-            key1 = selectedPage,
-        ) {
-            delay(3000)
-            setSelectedPage((selectedPage + 1) % numberOfPages)
-        }
-
-        PageIndicator(
-            numberOfPages = numberOfPages,
-            selectedPage = selectedPage,
-            defaultRadius = 60.dp,
-            selectedLength = 120.dp,
-            space = 30.dp,
-            animationDurationInMillis = 1000,
-        )
-    }
 
     @Composable
     fun PageIndicator(
@@ -194,9 +189,9 @@ class MainActivity : ComponentActivity() {
         selectedPage: Int = 0,
         selectedColor: Color = Color.Blue,
         defaultColor: Color = Color.LightGray,
-        defaultRadius: Dp = 20.dp,
-        selectedLength: Dp = 60.dp,
-        space: Dp = 30.dp,
+        defaultRadius: Dp = 5.dp,
+        selectedLength: Dp = 10.dp,
+        space: Dp = 5.5.dp,
         animationDurationInMillis: Int = 300,
     ) {
         Row(
