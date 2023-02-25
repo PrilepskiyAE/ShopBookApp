@@ -29,7 +29,7 @@ fun PageIndicator(
     numberOfPages: Int,
     modifier: Modifier = Modifier,
     selectedPage: Int = 0,
-    selectedColor: Color = Color.Blue,
+    selectedColor: Color =  Color(0xFF0F9D58),
     defaultColor: Color = Color.LightGray,
     defaultRadius: Dp = 5.dp,
     selectedLength: Dp = 10.dp,
