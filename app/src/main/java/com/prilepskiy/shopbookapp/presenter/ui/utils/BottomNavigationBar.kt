@@ -15,7 +15,7 @@ import com.prilepskiy.shopbookapp.presenter.ui.utils.Constants.BottomNavItems
 fun BottomNavigationBar(navController: NavHostController) {
 
     BottomNavigation(
-        backgroundColor = Color(0xFF0F9D58)
+        backgroundColor = Color(0xFFF39F0D)
     ) {
 
         // observe the backstack
