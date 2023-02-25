@@ -1,5 +1,7 @@
 package com.prilepskiy.shopbookapp.presenter.ui.сomposable
 
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
@@ -10,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun OutlinedTextFieldComposable():String {
@@ -33,20 +36,20 @@ fun TopAppBarBookList(searchBook: (String)->Unit,cleanBook: ()->Unit){
     TopAppBar(
 
 
-        title= {searchValues= OutlinedTextFieldComposable() },
-        backgroundColor =  Color(0xFFF39F0D),
-        actions = {
-            IconButton(onClick = { searchBook(searchValues)  }) {
-                Icon(Icons.Filled.Search, null)
-            }
-            IconButton(onClick = { cleanBook()  }) {
-                Icon(
-                    Icons.Filled.Check, null,
-                    Modifier
-                        .height(30.dp)
-                        .width(30.dp))
-            }
-        })
+        title= {Button(onClick = {},Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0F9D58), contentColor = Color.Black)
+        )
+        {
+            Text("Search", fontSize = 16.sp)
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "search",
+                tint = Color(0xFFF39F0D)
+            )
+        } },
+        backgroundColor =  Color(0xFFF39F0D)
+
+       )
 
 
 }

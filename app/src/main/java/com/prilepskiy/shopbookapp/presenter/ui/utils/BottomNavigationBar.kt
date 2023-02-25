@@ -18,7 +18,6 @@ fun BottomNavigationBar(navController: NavHostController) {
         backgroundColor = Color(0xFFF39F0D)
     ) {
 
-        // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
         val currentRoute = navBackStackEntry?.destination?.route
@@ -30,7 +29,6 @@ fun BottomNavigationBar(navController: NavHostController) {
 
                 selected = currentRoute == navItem.route,
 
-                // navigate on click
                 onClick = {
                     navController.navigate(navItem.route)
                 },
