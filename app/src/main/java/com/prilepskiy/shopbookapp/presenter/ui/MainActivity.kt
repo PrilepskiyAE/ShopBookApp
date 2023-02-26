@@ -50,10 +50,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         viewModel.getBooks()
         lifecycleScope.launch {
-            viewModel.bookList.collectLatest {
-                if (it != null) {
-                    Log.d("TAG", "onCreate: ${it.size}")
-                }
+            viewModel.state.collectLatest {
+
+                    Log.d("TAG", "onCreate: ${it.bookList}")
+                    Log.d("TAG", "onCreate1: ${it.bannerList}")
             }
         }
         setContent {

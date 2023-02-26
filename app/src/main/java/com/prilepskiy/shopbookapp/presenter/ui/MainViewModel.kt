@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.prilepskiy.shopbookapp.core.ActionResult
 import com.prilepskiy.shopbookapp.domain.interactors.GetBookListDataBaseUseCase
 import com.prilepskiy.shopbookapp.domain.interactors.GetBookListNetworkUseCase
+import com.prilepskiy.shopbookapp.domain.interactors.GetListBannerUseCase
 import com.prilepskiy.shopbookapp.domain.model.BookModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,28 +17,60 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel@Inject constructor(private val getBookListNetworkUseCase: GetBookListNetworkUseCase,
-                                       private val getBookListDataBaseUseCase: GetBookListDataBaseUseCase):ViewModel() {
+                                       private val getBookListDataBaseUseCase: GetBookListDataBaseUseCase,
+                                       private val getListBannerUseCase: GetListBannerUseCase):ViewModel() {
+    data class ListsViewState(
+        val bookList:List<BookModel>?=null,
+        val bannerList: List<Int>?=null
+    )
 
+    private val _state = MutableStateFlow(ListsViewState())
+    val state: StateFlow<ListsViewState> = _state.asStateFlow()
 
-    private val _bookList: MutableStateFlow<List<BookModel>?> by lazy {
-        MutableStateFlow(
-            null
-        )
-    }
-    val bookList =_bookList.asStateFlow()
     fun getBooks(){
+
         viewModelScope.launch {
             when(val result=getBookListNetworkUseCase()){
                 is ActionResult.Success ->{
-                    _bookList.emit(result.data)
-                }
+                    _state.value=_state.value.copy(bookList = result.data)
+                    //_bookList.emit(result.data)
+               }
                 is ActionResult.Error ->{
                     val cashResult=getBookListDataBaseUseCase()
                     cashResult.collectLatest {
-                        _bookList.value=it
+                        _state.value= _state.value.copy(bookList = it)
                     }
                 }
-            }
+           }
+            val bannerResult=getListBannerUseCase()
+            _state.value= _state.value.copy(bannerList = bannerResult)
         }
     }
+
+
+//    private val _bookList: MutableStateFlow<List<BookModel>?> by lazy {
+//        MutableStateFlow(
+//            null
+//        )
+//    }
+//    val bookList =_bookList.asStateFlow()
+//    fun getBooks(){
+//        viewModelScope.launch {
+//            when(val result=getBookListNetworkUseCase()){
+//                is ActionResult.Success ->{
+//                    _bookList.emit(result.data)
+//                }
+//                is ActionResult.Error ->{
+//                    val cashResult=getBookListDataBaseUseCase()
+//                    cashResult.collectLatest {
+//                        _bookList.value=it
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
+
+
 }
