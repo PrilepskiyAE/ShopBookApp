@@ -4,13 +4,17 @@ import android.content.Context
 import androidx.room.Room
 import com.prilepskiy.shopbookapp.data.apiservice.BookApiService
 import com.prilepskiy.shopbookapp.data.database.BooksAppDatabase
+import com.prilepskiy.shopbookapp.data.repository.BannersRepositoryImpl
 import com.prilepskiy.shopbookapp.data.repository.BookRepositoryImpl
 import com.prilepskiy.shopbookapp.data.unit.HeaderInterceptor
 import com.prilepskiy.shopbookapp.domain.interactors.GetBookListDataBaseUseCase
 import com.prilepskiy.shopbookapp.domain.interactors.GetBookListNetworkUseCase
+import com.prilepskiy.shopbookapp.domain.interactors.GetListBannerUseCase
+import com.prilepskiy.shopbookapp.domain.repository.BannersRepository
 import com.prilepskiy.shopbookapp.domain.repository.BookRepository
 import com.prilepskiy.shopbookapp.domain.usecase.GetBookListDataBaseUseCaseImpl
 import com.prilepskiy.shopbookapp.domain.usecase.GetBookListNetworkUseCaseImpl
+import com.prilepskiy.shopbookapp.domain.usecase.GetListBannerUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,6 +85,18 @@ class RepositoryBookModule() {
     ): BookRepository = BookRepositoryImpl(dataNetwork, database)
 }
 
+
+@Module
+@InstallIn(SingletonComponent::class)
+class BannersRepositoryModule() {
+    @Provides
+    @Singleton
+    fun provideBannersRepository(
+        dataNetwork: BookApiService,
+        database: BooksAppDatabase
+    ): BannersRepository = BannersRepositoryImpl()
+}
+
 @Module
 @InstallIn(ViewModelComponent::class)
 class UseCasBookModule() {
@@ -91,5 +107,9 @@ class UseCasBookModule() {
     @Provides
     fun provideGetBookListNetworkUseCase(data: BookRepository): GetBookListNetworkUseCase =
         GetBookListNetworkUseCaseImpl(data)
+
+    @Provides
+    fun provideGetListBannerUseCase(data: BannersRepository): GetListBannerUseCase =
+        GetListBannerUseCaseImpl(data)
 
 }
