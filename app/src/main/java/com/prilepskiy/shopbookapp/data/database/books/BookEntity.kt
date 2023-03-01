@@ -27,7 +27,7 @@ data class BookEntity(
     companion object {
         fun from(data: BookResponse?): BookEntity {
             return BookEntity(
-                data?.author ?: listOf(),
+                data?.authors ?: listOf(),
                 data?.bookshelves ?: listOf(),
                 data?.copyright ?: false,
                 data?.download_count ?: 0,

@@ -20,7 +20,7 @@ data class BookModel(
     companion object{
         fun from(data: BookResponse): BookModel = with(data) {
             BookModel(
-                AuthorModel.from(author),
+                AuthorModel.from(authors),
                 bookshelves?:listOf(),
                 copyright?:false,
                 download_count?:0,

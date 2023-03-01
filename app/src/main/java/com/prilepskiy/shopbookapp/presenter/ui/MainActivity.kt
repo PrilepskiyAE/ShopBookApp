@@ -33,6 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.prilepskiy.shopbookapp.R
 import com.prilepskiy.shopbookapp.data.apiservice.BannerApiService
+import com.prilepskiy.shopbookapp.domain.model.BookModel
 import com.prilepskiy.shopbookapp.presenter.theme.ShopBookAppTheme
 import com.prilepskiy.shopbookapp.presenter.ui.utils.BottomNavigationBar
 import com.prilepskiy.shopbookapp.presenter.ui.utils.NavHostContainer
@@ -46,33 +47,35 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getBooks()
         lifecycleScope.launch {
             viewModel.state.collectLatest {
+                setContent {
+                    ShopBookAppTheme {
+                        val navController = rememberNavController()
+                        Surface(color = Color.White) {
+                            // Scaffold Component
+                            Scaffold(
+                                // Bottom navigation
+                                bottomBar = {
+                                    BottomNavigationBar(navController = navController)
+                                }, content = { padding ->
+                                    // Navhost: where screens are placed
+                                    //
+                                    NavHostContainer(navController = navController, padding = padding,it)
 
-                    Log.d("TAG", "onCreate: ${it.bookList}")
-                    Log.d("TAG", "onCreate1: ${it.bannerList}")
-            }
-        }
-        setContent {
-            ShopBookAppTheme {
-                val navController = rememberNavController()
-                Surface(color = Color.White) {
-                    // Scaffold Component
-                    Scaffold(
-                        // Bottom navigation
-                        bottomBar = {
-                            BottomNavigationBar(navController = navController)
-                        }, content = { padding ->
-                            // Navhost: where screens are placed
-                            NavHostContainer(navController = navController, padding = padding)
+                                }
+                            )
                         }
-                    )
+                    }
                 }
+
             }
         }
+
 
     }
 }
