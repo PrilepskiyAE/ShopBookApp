@@ -1,7 +1,7 @@
 package com.prilepskiy.shopbookapp.data.response
 
 data class BookResponse(
-    val author: List<AuthorResponse?>,
+    val authors: List<AuthorResponse?>,
     val bookshelves: List<String?>,
     val copyright: Boolean?,
     val download_count: Int?,

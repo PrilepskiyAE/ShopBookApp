@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.prilepskiy.shopbookapp.data.apiservice.BannerApiService
+import com.prilepskiy.shopbookapp.presenter.ui.MainViewModel
 import com.prilepskiy.shopbookapp.presenter.ui.сomposable.FavoriteScreenComposable
 import com.prilepskiy.shopbookapp.presenter.ui.сomposable.HomeScreenComposable
 import com.prilepskiy.shopbookapp.presenter.ui.сomposable.ProfileScreenComposable
@@ -17,7 +19,7 @@ import com.prilepskiy.shopbookapp.presenter.ui.сomposable.SearchScreenComposabl
 @Composable
 fun NavHostContainer(
     navController: NavHostController,
-    padding: PaddingValues
+    padding: PaddingValues,state: MainViewModel.ListsViewState
 ) {
 
     NavHost(
@@ -30,7 +32,11 @@ fun NavHostContainer(
         builder = {
 
             composable("home") {
-                HomeScreenComposable()
+                state.bookList?.let { it1 ->
+                    HomeScreenComposable(state.bannerList?: BannerApiService.getListBanner(),
+                        it1
+                    )
+                }
             }
 
             composable("search") {
