@@ -11,7 +11,7 @@ abstract class BooksDao: BaseDao<BookEntity>() {
     @Query("SELECT * FROM book_table")
     abstract fun getAllBook(): Flow<List<BookEntity>>
 
-    @Query("SELECT * FROM book_table")
+    @Query("SELECT * FROM book_table Order By page")
     abstract fun getAllBookPagingSource(): PagingSource<Int, BookEntity>
 
     @Query("Delete From book_table")

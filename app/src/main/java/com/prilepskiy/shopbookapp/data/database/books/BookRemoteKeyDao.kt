@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class BookRemoteKeyDao: BaseDao<BookRemoteKey>() {
-    @Query("Select * From remote_key Where book_id = :id")
+    @Query("Select * From remote_key Where book_id == :id")
    abstract suspend fun getRemoteKeyByBookID(id: Int): BookRemoteKey?
 
     @Query("Delete From remote_key")

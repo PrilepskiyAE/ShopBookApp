@@ -5,7 +5,7 @@ data class BookResponse(
     val bookshelves: List<String?>,
     val copyright: Boolean?,
     val download_count: Int?,
-    val id: Int?,
+    val id: Int,
     val languages: List<String?>,
     val media_type: String?,
     val subjects: List<String?>,

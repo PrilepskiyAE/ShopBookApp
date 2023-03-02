@@ -10,6 +10,8 @@ import com.prilepskiy.shopbookapp.domain.interactors.GetBookListNetworkUseCase
 import com.prilepskiy.shopbookapp.domain.interactors.GetListBannerUseCase
 import com.prilepskiy.shopbookapp.domain.model.BookModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -71,7 +73,9 @@ class MainViewModel@Inject constructor(private val getBookListNetworkUseCase: Ge
 //    }
 
 
-     fun getBook(): Flow<PagingData<BookModel>> =  getBookListNetworkUseCase()
+     fun getBook(): Flow<PagingData<BookModel>> =  getBookListNetworkUseCase().cachedIn(
+         CoroutineScope(Dispatchers.IO)
+     )
 
     fun getBooks(){
         viewModelScope.launch {
