@@ -22,10 +22,11 @@ data class BookEntity(
     val media_type: String,
     val subjects: List<String?>,
     val title: String,
-    val translator: List<TranslatorResponse?>
+    val translator: List<TranslatorResponse?>,
+    var page: Int
 ) {
     companion object {
-        fun from(data: BookResponse?): BookEntity {
+        fun from(data: BookResponse?,page: Int): BookEntity {
             return BookEntity(
                 data?.authors ?: listOf(),
                 data?.bookshelves ?: listOf(),
@@ -36,11 +37,13 @@ data class BookEntity(
                 data?.media_type ?: "",
                 data?.subjects ?: listOf(),
                 data?.title ?: "",
-                data?.translator ?: listOf()
+                data?.translator ?: listOf(),
+                page = page
+
             )
         }
 
-        fun from(data: BookModel): BookEntity = with(data) {
+        fun from(data: BookModel,page: Int): BookEntity = with(data) {
             BookEntity(
                 AuthorResponse.from(author),
                 bookshelves,
@@ -51,7 +54,7 @@ data class BookEntity(
                 media_type,
                 subjects,
                 title,
-                TranslatorResponse.from(translator)
+                TranslatorResponse.from(translator), page = page
             )
         }
     }
