@@ -57,5 +57,13 @@ data class BookEntity(
                 TranslatorResponse.from(translator), page = page
             )
         }
+
+        fun from(data:List< BookResponse>,page: Int):List<BookEntity> {
+            val temp:MutableList<BookEntity> = mutableListOf()
+            data.forEach {
+                temp.add(from(it,page))
+            }
+            return temp
+        }
     }
 }

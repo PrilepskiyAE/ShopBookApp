@@ -29,6 +29,14 @@ class BookRepositoryImpl @Inject constructor(private val dataNetwork: BookApiSer
        ), pagingSourceFactory ={dataDB.booksDao.getAllBookPagingSource()}, remoteMediator = BookMediator(dataNetwork,dataDB) ).flow
     }
 
+    fun getBooksNetwork(): Flow<PagingData<BookModel>> {
+        return Pager(config = PagingConfig(
+            pageSize = 32,
+            prefetchDistance = 10,
+            initialLoadSize = 32,
+        ), pagingSourceFactory ={BooksPagingSource(dataNetwork,dataDB)} ).flow
+    }
+
     override suspend fun getBooksDataBase(): Flow<List<BookModel>> = dataDB.booksDao.getAllBook().map {
         BookModel.from(it)
     }

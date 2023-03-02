@@ -52,32 +52,27 @@ class BookMediator(private val booksApiService: BookApiService,private val dataD
 
 
         try {
-            val apiResponse =booksApiService.getBooks(page)
-            val books = apiResponse.body()?.results
-            val endOfPaginationReached = books.isNullOrEmpty()
+            val apiResponse = booksApiService.getBooks(page = page)
+
+            val book = apiResponse.body()
+            val endOfPaginationReached = book?.next.isNullOrEmpty()
+            val bookEntity=BookEntity.from(book?.results?: listOf(),page)
+
             dataDB.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     dataDB.remoteKey.clearRemoteKeys()
                     dataDB.booksDao.clearAllBook()
                 }
-                val prevKey = if (page == 1) null else page.minus(1)
-                val nextKey = if (endOfPaginationReached) null else page + 1
-                val remoteKeys = books?.map {
-                    BookRemoteKey(bookID = it.id?:1, prevKey = prevKey, currentPage = page, nextKey = nextKey)
-                }
-                if (remoteKeys != null) {
-                    dataDB.remoteKey.insert(remoteKeys)
-                }
-                books?.forEach {
-                    dataDB.booksDao.insert(BookEntity.from(it,page))
+                val prevKey = if (page > 1) page - 1 else null
+                val nextKey = if (endOfPaginationReached == true) null else page + 1
+                val remoteKeys = book?.results?.map {
+                    BookRemoteKey(bookID = it.id, prevKey = prevKey, currentPage = page, nextKey = nextKey)
                 }
 
+                dataDB.remoteKey.insert(remoteKeys!!)
+                dataDB.booksDao.insert(bookEntity)
             }
-
-
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (error: IOException) {
-            return MediatorResult.Error(error)
         } catch (error: HttpException) {
             return MediatorResult.Error(error)
         }
@@ -92,16 +87,16 @@ class BookMediator(private val booksApiService: BookApiService,private val dataD
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, BookEntity>): BookRemoteKey? {
         return state.pages.firstOrNull {
             it.data.isNotEmpty()
-        }?.data?.firstOrNull()?.let { movie ->
-            dataDB.remoteKey.getRemoteKeyByBookID(movie.id)
+        }?.data?.firstOrNull()?.let { book ->
+            dataDB.remoteKey.getRemoteKeyByBookID(book.id)
         }
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int,BookEntity>): BookRemoteKey? {
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
-        }?.data?.lastOrNull()?.let { movie ->
-            dataDB.remoteKey.getRemoteKeyByBookID(movie.id)
+        }?.data?.lastOrNull()?.let { book ->
+            dataDB.remoteKey.getRemoteKeyByBookID(book.id)
         }
     }
 
