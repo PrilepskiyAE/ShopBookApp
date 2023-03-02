@@ -71,7 +71,7 @@ class MainViewModel@Inject constructor(private val getBookListNetworkUseCase: Ge
 //    }
 
 
-     fun getBook(): Flow<PagingData<BookModel>> =  getBookListNetworkUseCase().cachedIn(viewModelScope)
+     fun getBook(): Flow<PagingData<BookModel>> =  getBookListNetworkUseCase()
 
     fun getBooks(){
         viewModelScope.launch {

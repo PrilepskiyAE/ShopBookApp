@@ -43,6 +43,7 @@ fun HomeScreenContentComposable(bannerList:List<Int>, bookList: Flow<PagingData<
         //val items = bookList
         val lazyListState = rememberLazyListState()
         val lazyBookItems: LazyPagingItems<BookModel> = bookList.collectAsLazyPagingItems()
+
         LazyColumn(
             Modifier.fillMaxSize(),
             lazyListState,
@@ -53,12 +54,9 @@ fun HomeScreenContentComposable(bannerList:List<Int>, bookList: Flow<PagingData<
                 Banners(bannerList)
             }
 
-            item {
-
-                Banners(bannerList)
-            }
-
+            val loadState =lazyBookItems.loadState.mediator
             items(lazyBookItems) {
+
                 Text(
                     text =it?.title?:"NULL" ,
                     Modifier

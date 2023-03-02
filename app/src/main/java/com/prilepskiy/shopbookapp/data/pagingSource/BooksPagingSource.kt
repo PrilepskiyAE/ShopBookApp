@@ -60,7 +60,7 @@ class BooksPagingSource (
             is ActionResult.Success -> {
                 apiData.data.results.onEach {
                     resultData.add(BookModel.from(it))
-                    dataDB.booksDao.insert(BookEntity.from(it))
+                    dataDB.booksDao.insert(BookEntity.from(it,page))
                 }
                 ActionResult.Success(resultData)
             }
