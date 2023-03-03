@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 
 import com.prilepskiy.shopbookapp.data.response.AuthorResponse
 import com.prilepskiy.shopbookapp.data.response.BookResponse
+import com.prilepskiy.shopbookapp.data.response.FormatsResponse
 import com.prilepskiy.shopbookapp.data.response.TranslatorResponse
 import com.prilepskiy.shopbookapp.domain.model.BookModel
 
@@ -22,11 +23,12 @@ data class BookEntity(
     val media_type: String,
     val subjects: List<String?>,
     val title: String,
+    val formats: FormatsResponse,
     val translator: List<TranslatorResponse?>,
     var page: Int
 ) {
     companion object {
-        fun from(data: BookResponse?,page: Int): BookEntity {
+        fun from(data: BookResponse?, page: Int): BookEntity {
             return BookEntity(
                 data?.authors ?: listOf(),
                 data?.bookshelves ?: listOf(),
@@ -37,13 +39,15 @@ data class BookEntity(
                 data?.media_type ?: "",
                 data?.subjects ?: listOf(),
                 data?.title ?: "",
+                data?.formats ?: FormatsResponse("", "", ""),
                 data?.translator ?: listOf(),
+
                 page = page
 
             )
         }
 
-        fun from(data: BookModel,page: Int): BookEntity = with(data) {
+        fun from(data: BookModel, page: Int): BookEntity = with(data) {
             BookEntity(
                 AuthorResponse.from(author),
                 bookshelves,
@@ -54,14 +58,16 @@ data class BookEntity(
                 media_type,
                 subjects,
                 title,
-                TranslatorResponse.from(translator), page = page
+                FormatsResponse.from(data.formats),
+                TranslatorResponse.from(translator),
+                page = page
             )
         }
 
-        fun from(data:List< BookResponse>,page: Int):List<BookEntity> {
-            val temp:MutableList<BookEntity> = mutableListOf()
+        fun from(data: List<BookResponse>, page: Int): List<BookEntity> {
+            val temp: MutableList<BookEntity> = mutableListOf()
             data.forEach {
-                temp.add(from(it,page))
+                temp.add(from(it, page))
             }
             return temp
         }

@@ -3,6 +3,7 @@ package com.prilepskiy.shopbookapp.data.database.books
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.prilepskiy.shopbookapp.data.response.AuthorResponse
+import com.prilepskiy.shopbookapp.data.response.FormatsResponse
 import com.prilepskiy.shopbookapp.data.response.TranslatorResponse
 
 class BookEntityConverter {
@@ -25,4 +26,12 @@ class BookEntityConverter {
 
     @TypeConverter
     fun jsonToTranslatorList(value: String) = Gson().fromJson(value, Array<TranslatorResponse>::class.java).toList()
+
+
+    @TypeConverter
+    fun formatsToJson(value: FormatsResponse) = Gson().toJson(value)
+
+    @TypeConverter
+    fun jsonToformats(value: String) = Gson().fromJson(value, FormatsResponse::class.java)
+
 }
