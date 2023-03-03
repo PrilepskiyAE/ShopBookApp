@@ -10,5 +10,6 @@ data class BookResponse(
     val media_type: String?,
     val subjects: List<String?>,
     val title: String?,
+    val formats:FormatsResponse,
     val translator: List<TranslatorResponse?>
 )

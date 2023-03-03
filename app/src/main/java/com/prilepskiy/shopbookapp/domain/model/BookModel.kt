@@ -15,6 +15,7 @@ data class BookModel(
     val media_type: String,
     val subjects: List<String?>,
     val title: String,
+    val formats:FormatsModel,
     val translator: List<TranslatorModel>
 ){
     companion object{
@@ -29,6 +30,7 @@ data class BookModel(
                 media_type?:"",
                 subjects,
                 title?:"",
+                FormatsModel.from(formats),
                 TranslatorModel.from(translator)
             )
         }
@@ -43,6 +45,7 @@ data class BookModel(
                 media_type,
                 subjects,
                 title,
+                FormatsModel.from(formats),
                 TranslatorModel.from(translator)
             )
         }
