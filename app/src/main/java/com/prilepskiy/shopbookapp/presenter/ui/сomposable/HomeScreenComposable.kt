@@ -1,12 +1,17 @@
 package com.prilepskiy.shopbookapp.presenter.ui.сomposable
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -19,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -30,44 +36,82 @@ import com.prilepskiy.shopbookapp.presenter.ui.MainViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.flow.Flow
+import java.time.format.TextStyle
 
 @Composable
-fun HomeScreenComposable(bannerList:List<Int>, bookList: Flow<PagingData<BookModel>>){
+fun HomeScreenComposable(bannerList: List<Int>, bookList: Flow<PagingData<BookModel>>) {
     Scaffold(
-        topBar = { TopAppBarBookList({},{}) },
-        content = {it
-            HomeScreenContentComposable(bannerList,bookList)
+        topBar = { TopAppBarBookList({}, {}) },
+        content = {
+            it
+            HomeScreenContentComposable(bannerList, bookList)
 
         }
     )
 }
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreenContentComposable(bannerList:List<Int>, bookList: Flow<PagingData<BookModel>>){
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+fun HomeScreenContentComposable(bannerList: List<Int>, bookList: Flow<PagingData<BookModel>>) {
+    Column() {
         Log.d("TAG99", "HomeScreenContentComposable:$bookList ")
         //val items = bookList
         val lazyListState = rememberLazyListState()
         val lazyBookItems: LazyPagingItems<BookModel> = bookList.collectAsLazyPagingItems()
 
-        LazyColumn(
-            Modifier.fillMaxSize(),
-            lazyListState,
-        ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Green)
+            .weight(weight = 1f)) {
+            Banners(bannerList)
+        }
+        Box(modifier = Modifier
+            .background(Color.Green)
+            .fillMaxWidth()
+            .weight(weight = 2f)) {
+            val loadState = lazyBookItems.loadState.mediator
 
-            item {
+                    LazyColumn(
+                        Modifier.fillMaxSize(),
+                        lazyListState,
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        items(lazyBookItems){
+                        if (it != null) {
+                            BooksListItem(it, {})
+                        }
+                    }
 
-                Banners(bannerList)
-            }
-
-            val loadState =lazyBookItems.loadState.mediator
-            items(lazyBookItems) {
-
-                if (it != null) {
-                    BooksListItem(it,{})
                 }
             }
+
+
+
+
+//
+//            item {
+//
+//
+//            }
+
+//            item {
+//                LazyVerticalStaggeredGrid(
+//                    state = rememberLazyStaggeredGridState(),
+//                    columns = StaggeredGridCells.Fixed(2),
+//                    modifier = Modifier.fillMaxSize(),
+//                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+//                    verticalArrangement = Arrangement.spacedBy(10.dp),
+//                    content = {
+//
+
+//                    }
+//                )
+//            }
+
         }
-    }
+
+
+
 }
 
 
@@ -80,33 +124,34 @@ fun BooksListItem(book: BookModel, selectedItem: (BookModel) -> Unit) {
         elevation = 10.dp,
         shape = RoundedCornerShape(corner = CornerSize(10.dp))
     ) {
-        Column(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth()
-                .clickable { selectedItem(book) },
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            BookImage(book = book)
 
-            Text(text = book.title.toString(), style = MaterialTheme.typography.body1)
+            Row( modifier = Modifier .fillMaxWidth()) {
+                BookImage(book = book)
+                Text(text = book.title.toString(), style = MaterialTheme.typography.body1,modifier = Modifier.padding(10.dp).wrapContentSize(Alignment.Center))
+            }
+
+
             Spacer(modifier = Modifier.height(4.dp))
-          
 
-        }
+
+
 
     }
 
 }
+
 @Composable
 fun BookImage(book: BookModel) {
 
     GlideImage(
-        imageModel = {book.formats.image_jpeg} ,
+        imageModel = { book.formats.image_jpeg },
         imageOptions = ImageOptions(
             contentDescription = null,
             contentScale = ContentScale.Crop,
         ), modifier = Modifier
-            .wrapContentHeight()
-            .wrapContentWidth())
+            .height(80.dp)
+            .width(80.dp)
+            .padding(2.dp)
+
+    )
 }
